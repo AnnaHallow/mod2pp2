@@ -67,22 +67,23 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
 
-//TODO
 
-//    public List<Reservation> availableReservationsByPark(int parkId, LocalDate to_date, LocalDate from_date){
-//        List<Reservation> reservations = new ArrayList<>();
-//        String sql = "SELECT r.reservation_id, r.site_id, r.name, r.from_date, r.to_date, r.create_date " +
-//                "FROM reservation r " +
-//                "JOIN site s USING(site_id) " +
-//                "JOIN campground c USING(campground_id) " +
-//                "WHERE c.park_id = ? AND (r.from_date BETWEEN ? AND ? )";
-//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId,to_date,from_date);
-//
-//        while(results.next()){
-//            reservations.add(mapRowToReservation(results));
-//        }
-//        return reservations;
-//    }
+    public List<Reservation> futureUpcomingReservationsByPark(int parkId, LocalDate fromDate, LocalDate toDate){
+        List<Reservation> reservations = new ArrayList<>();
+        String sql = "SELECT * FROM reservation r " +
+                "JOIN site s USING(site_id) " +
+                "JOIN campground c USING(campground_id) " +
+                "WHERE c.park_id = ? " +
+                "AND r.from_date NOT BETWEEN ? AND r.to_date " +
+                "AND r.to_date NOT BETWEEN r.from_date AND ? " +
+                "ORDER BY r.from_date ";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId,fromDate,toDate);
+
+        while(results.next()){
+            reservations.add(mapRowToReservation(results));
+        }
+        return reservations;
+    }
 
     private Reservation mapRowToReservation(SqlRowSet results) {
         Reservation r = new Reservation();

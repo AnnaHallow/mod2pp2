@@ -13,4 +13,6 @@ public interface ReservationDao {
     List<Reservation> upcomingReservationsByPark(int site_id);
 
      List<Reservation> openUpcomingReservationsByPark(int park_id);
+
+    List<Reservation> futureUpcomingReservationsByPark(int park_id, LocalDate startDate, LocalDate endDate);
 }

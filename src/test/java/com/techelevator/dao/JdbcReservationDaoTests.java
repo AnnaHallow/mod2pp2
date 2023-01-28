@@ -46,4 +46,13 @@ public class JdbcReservationDaoTests extends BaseDaoTests {
         //assertEquals("Ohio", parks.get(0).getLocation());
         //assertEquals("Pennsylvania", parks.get(1).getLocation());
     }
+
+    @Test
+    public void futureUpcomingReservationsByPark() {
+        List<Reservation> reservations = dao.futureUpcomingReservationsByPark(1,LocalDate.now().plusDays(3),LocalDate.now().plusDays(5) );
+
+        assertEquals(2, reservations.size());
+        //assertEquals("Ohio", parks.get(0).getLocation());
+        //assertEquals("Pennsylvania", parks.get(1).getLocation());
+    }
 }
