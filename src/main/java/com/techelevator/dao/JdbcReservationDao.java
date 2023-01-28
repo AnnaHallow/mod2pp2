@@ -51,11 +51,14 @@ public class JdbcReservationDao implements ReservationDao {
 
     public List<Reservation> openUpcomingReservationsByPark(int parkId){
         List<Reservation> reservations = new ArrayList<>();
-        String sql = "SELECT site_id FROM reservation r " +
+        String sql = "SELECT * FROM reservation r " +
                 "JOIN site s USING(site_id) " +
                 "JOIN campground c USING(campground_id) " +
-                "WHERE park_id = ? AND (to_date NOT BETWEEN ? and ? ) ";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId, LocalDate.now().plusDays(1), LocalDate.now());
+                "WHERE c.park_id = ? " +
+                "AND r.from_date NOT BETWEEN CURRENT_DATE AND r.to_date " +
+                "AND r.to_date NOT BETWEEN CURRENT_DATE AND r.from_date " +
+                "ORDER BY r.from_date ";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId);
 
         while(results.next()){
             reservations.add(mapRowToReservation(results));
