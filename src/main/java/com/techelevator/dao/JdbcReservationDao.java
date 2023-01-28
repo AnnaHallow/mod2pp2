@@ -77,7 +77,7 @@ public class JdbcReservationDao implements ReservationDao {
                 "AND r.from_date NOT BETWEEN ? AND r.to_date " +
                 "AND r.to_date NOT BETWEEN r.from_date AND ? " +
                 "ORDER BY r.from_date ";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId,fromDate,toDate);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId,toDate,fromDate);
 
         while(results.next()){
             reservations.add(mapRowToReservation(results));
